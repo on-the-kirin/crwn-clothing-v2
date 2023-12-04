@@ -3,6 +3,8 @@ import { useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 
+import { UserContext } from "../../contexts/user.context";
+
 import { createAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
 import { createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
 
@@ -40,11 +42,12 @@ const SignUpForm = () => {
     }
 
     try {
-      const result = await createAuthUserWithEmailAndPassword(email, password);
-      const { user } = result;
-      if (!user) return;
+      const { user } = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
 
-      createUserDocumentFromAuth(user, { displayName });
+      await createUserDocumentFromAuth(user, { displayName });
 
       resetField();
     } catch (error) {
